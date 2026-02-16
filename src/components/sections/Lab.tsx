@@ -82,7 +82,15 @@ const experiments = [
 
 export default function Lab() {
     const [activeMode, setActiveMode] = useState<"Live Demo" | "Preview" | "Concept">("Live Demo");
+    const [isMobile, setIsMobile] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Mouse tilt effect
     const mouseX = useMotionValue(0);
@@ -101,15 +109,19 @@ export default function Lab() {
         <section id="lab" className="py-32 relative bg-[#030304] overflow-hidden" ref={containerRef} onMouseMove={handleMouseMove}>
             {/* Background Video - Earth */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"
-                >
-                    <source src="/bg/earth.mp4" type="video/mp4" />
-                </video>
+                {!isMobile ? (
+                    <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"
+                    >
+                        <source src="/bg/earth.mp4" type="video/mp4" />
+                    </video>
+                ) : (
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-950/30 via-black to-black" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#030304] via-[#030304]/50 to-[#030304] opacity-90" />
             </div>
 
