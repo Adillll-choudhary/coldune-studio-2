@@ -1,16 +1,18 @@
 import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Founders from "@/components/sections/Founders";
-import Services from "@/components/sections/Services";
-import Work from "@/components/sections/Work";
-import PremiumBranding from "@/components/sections/PremiumBranding";
-import Lab from "@/components/sections/Lab";
-import Growth from "@/components/sections/Growth";
-import Pricing from "@/components/sections/Pricing";
-import Clients from "@/components/sections/Clients";
-import Journal from "@/components/sections/Journal";
-import Testimonials from "@/components/sections/Testimonials";
-import Contact from "@/components/sections/Contact";
+import dynamic from 'next/dynamic';
+
+const About = dynamic(() => import("@/components/sections/About"));
+const Founders = dynamic(() => import("@/components/sections/Founders"));
+const Services = dynamic(() => import("@/components/sections/Services"));
+const Work = dynamic(() => import("@/components/sections/Work"));
+const PremiumBranding = dynamic(() => import("@/components/sections/PremiumBranding"));
+const Lab = dynamic(() => import("@/components/sections/Lab"));
+const Growth = dynamic(() => import("@/components/sections/Growth"));
+const Pricing = dynamic(() => import("@/components/sections/Pricing"));
+const Clients = dynamic(() => import("@/components/sections/Clients"));
+const Journal = dynamic(() => import("@/components/sections/Journal"));
+const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
+const Contact = dynamic(() => import("@/components/sections/Contact"));
 
 export default function Home() {
   return (
