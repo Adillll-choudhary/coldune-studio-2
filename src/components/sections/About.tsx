@@ -2,10 +2,19 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function About() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [isMobile, setIsMobile] = useState(true);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"],
@@ -30,15 +39,19 @@ export default function About() {
                     style={{ scale, rotate: rotateLeft }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
-                    >
-                        <source src="/bg/story-forest.mp4" type="video/mp4" />
-                    </video>
+                    {!isMobile ? (
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
+                        >
+                            <source src="/bg/story-forest.mp4" type="video/mp4" />
+                        </video>
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-green-900/20 via-black to-black" />
+                    )}
 
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
@@ -59,15 +72,19 @@ export default function About() {
                     style={{ scale }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(255,255,255,0.05)] group md:-mt-12 cursor-pointer"
                 >
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out brightness-125"
-                    >
-                        <source src="/bg/firefly.mp4" type="video/mp4" />
-                    </video>
+                    {!isMobile ? (
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out brightness-125"
+                        >
+                            <source src="/bg/firefly.mp4" type="video/mp4" />
+                        </video>
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-blue-900/20 via-black to-black" />
+                    )}
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
 
@@ -87,15 +104,19 @@ export default function About() {
                     style={{ scale, rotate: rotateRight }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
-                    >
-                        <source src="/bg/0216.mp4" type="video/mp4" />
-                    </video>
+                    {!isMobile ? (
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
+                        >
+                            <source src="/bg/0216.mp4" type="video/mp4" />
+                        </video>
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-purple-900/20 via-black to-black" />
+                    )}
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
 
