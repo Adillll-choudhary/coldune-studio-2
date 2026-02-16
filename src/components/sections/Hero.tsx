@@ -10,6 +10,15 @@ export default function Hero() {
     const isInView = useInView(sectionRef, { amount: 0.5 });
     const { scrollY } = useScroll();
 
+    const [isMobile, setIsMobile] = useState(true);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const [hasPreloaded, setHasPreloaded] = useState(false);
 
     useEffect(() => {
@@ -53,37 +62,39 @@ export default function Hero() {
                 </div>
 
                 {/* Desktop: Video Background with Poster */}
-                <motion.div
-                    style={{ y: y1, scale }}
-                    initial={{ scale: 1.15, opacity: 0 }}
-                    animate={hasPreloaded ? { scale: 1, opacity: 1 } : { scale: 1.15, opacity: 0 }}
-                    transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-                    className="hidden md:block w-full h-full relative will-change-transform"
-                >
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        poster="/bg/IMG_3692.PNG"
-                        className="w-full h-full object-cover transition-opacity duration-1000 brightness-[1.05]"
+                {!isMobile && (
+                    <motion.div
+                        style={{ y: y1, scale }}
+                        initial={{ scale: 1.15, opacity: 0 }}
+                        animate={hasPreloaded ? { scale: 1, opacity: 1 } : { scale: 1.15, opacity: 0 }}
+                        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+                        className="hidden md:block w-full h-full relative will-change-transform"
                     >
-                        <source src="/bg/firefly.mp4" type="video/mp4" />
-                    </video>
+                        <video
+                            ref={videoRef}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="auto"
+                            poster="/bg/IMG_3692.PNG"
+                            className="w-full h-full object-cover transition-opacity duration-1000 brightness-[1.05]"
+                        >
+                            <source src="/bg/firefly.mp4" type="video/mp4" />
+                        </video>
 
-                    {/* Dynamic Atmospheric Overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#08090B]/40 via-transparent to-[#08090B]/80 z-10" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/80 via-transparent to-transparent z-10" />
+                        {/* Dynamic Atmospheric Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#08090B]/40 via-transparent to-[#08090B]/80 z-10" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/80 via-transparent to-transparent z-10" />
 
-                    {/* Sharpening HUD Frame */}
-                    <div className="absolute inset-10 border border-white/[0.03] rounded-[3rem] pointer-events-none z-20" />
+                        {/* Sharpening HUD Frame */}
+                        <div className="absolute inset-10 border border-white/[0.03] rounded-[3rem] pointer-events-none z-20" />
 
-                    {/* Hyper-Glow Lens Flare */}
-                    <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-accent/15 blur-[180px] rounded-full z-10 animate-pulse-slow mix-blend-screen" />
-                    <div className="absolute bottom-[-15%] left-[5%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full z-10 mix-blend-overlay" />
-                </motion.div>
+                        {/* Hyper-Glow Lens Flare */}
+                        <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-accent/15 blur-[180px] rounded-full z-10 animate-pulse-slow mix-blend-screen" />
+                        <div className="absolute bottom-[-15%] left-[5%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full z-10 mix-blend-overlay" />
+                    </motion.div>
+                )}
             </div>
 
 

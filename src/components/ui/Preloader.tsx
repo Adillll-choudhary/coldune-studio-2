@@ -9,62 +9,8 @@ export default function Preloader() {
     const [isLoadDone, setIsLoadDone] = useState(false);
     const [particles, setParticles] = useState<{ x: number, y: number, opacity: number, scale: number, duration: number }[]>([]);
 
-    // Synthetic Shutter Sound Effect (Web Audio API)
-    const playShutterSound = () => {
-        try {
-            const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const masterGain = context.createGain();
-            masterGain.connect(context.destination);
+    // Audio removed for mobile stability
 
-            // 1. Technical 'Whoosh' (White Noise Sweep)
-            const bufferSize = context.sampleRate * 1.5;
-            const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-
-            const noise = context.createBufferSource();
-            noise.buffer = buffer;
-
-            const filter = context.createBiquadFilter();
-            filter.type = "lowpass";
-            filter.frequency.setValueAtTime(100, context.currentTime);
-            filter.frequency.exponentialRampToValueAtTime(10000, context.currentTime + 1.2);
-
-            const noiseGain = context.createGain();
-            noiseGain.gain.setValueAtTime(0, context.currentTime);
-            noiseGain.gain.linearRampToValueAtTime(0.08, context.currentTime + 0.1);
-            noiseGain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 1.2);
-
-            noise.connect(filter);
-            filter.connect(noiseGain);
-            noiseGain.connect(masterGain);
-
-            // 2. Cinematic 'Clack' (Deep Sine Drop)
-            const osc = context.createOscillator();
-            const oscGain = context.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(150, context.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(40, context.currentTime + 0.8);
-
-            oscGain.gain.setValueAtTime(0.1, context.currentTime);
-            oscGain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.8);
-
-            osc.connect(oscGain);
-            oscGain.connect(masterGain);
-
-            noise.start();
-            osc.start();
-            noise.stop(context.currentTime + 1.5);
-            osc.stop(context.currentTime + 1.5);
-
-            // Auto close context
-            setTimeout(() => context.close(), 2000);
-        } catch (e) {
-            // Silently fail if blocked, prevents 'play() failed' log
-        }
-    };
 
     useEffect(() => {
         // Capture early interaction to unlock audio engine
@@ -103,10 +49,8 @@ export default function Preloader() {
             setIsLoadDone(true);
             setIsLoading(false);
 
-            // Try to play shutter sound silently
-            try {
-                playShutterSound();
-            } catch (e) { }
+            // Audio removed
+
 
             window.scrollTo(0, 0);
             (window as any).preloaderDone = true;
