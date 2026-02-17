@@ -92,7 +92,7 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                 <div className="relative w-full h-full flex items-center justify-center transform-style-3d">
                     {projects.map((project, index) => {
                         const style = getCardStyle(index);
-                        const isVisible = Math.abs(index - activeIndex) <= 4; // Only render nearby cards for performance
+                        const isVisible = Math.abs(index - activeIndex) <= (isMobile ? 1 : 3); // Reduce range for performance
 
                         if (!isVisible) return null;
 
@@ -120,11 +120,16 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                             <video
                                                 ref={(el) => { videoRefs.current[index] = el; }}
                                                 src={`/work/${project.file}`}
-                                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                                                className={`w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 ${activeIndex !== index ? 'brightness-75' : ''}`}
                                                 muted
                                                 loop
-                                                autoPlay
                                                 playsInline
+                                                autoPlay={activeIndex === index} // Only autoplay active
+                                                preload={Math.abs(index - activeIndex) <= 1 ? "auto" : "none"}
+                                                onError={(e) => {
+                                                    console.error("Video load failed", project.file);
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
                                             />
                                         ) : (
                                             <Image

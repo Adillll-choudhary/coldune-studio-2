@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import CoverflowSlider from "@/components/canvas/CoverflowSlider";
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { Sparkles } from "lucide-react";
 
 // Background colors for each slide - refined for depth
@@ -121,7 +122,9 @@ export default function Work() {
             {/* 4. Coverflow Carousel Container - Elevated with Glow */}
             <div className="relative w-full z-20 overflow-visible py-10">
                 {/* 3D Coverflow Slider */}
-                <CoverflowSlider onSlideChange={setActiveSlide} />
+                <ErrorBoundary componentName="Work Gallery">
+                    <CoverflowSlider onSlideChange={setActiveSlide} />
+                </ErrorBoundary>
 
                 {/* Decorative Side Glows - Enhanced */}
                 <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-accent/10 blur-[150px] rounded-full pointer-events-none opacity-40 mix-blend-screen" />

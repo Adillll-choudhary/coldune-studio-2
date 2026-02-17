@@ -64,6 +64,10 @@ function VideoTexture({ url, opacity }: { url: string, opacity: number }) {
         start: true,
         crossOrigin: 'Anonymous',
     });
+    // Cleanup video texture on unmount
+    useEffect(() => {
+        return () => texture.dispose();
+    }, [texture]);
 
     return (
         <meshBasicMaterial map={texture} toneMapped={false} transparent opacity={opacity} side={THREE.DoubleSide} />
@@ -222,9 +226,14 @@ interface WorkOrbitProps {
 }
 
 export default function WorkOrbit({ onSelectProject }: WorkOrbitProps) {
+    const [dpr, setDpr] = useState(1.5);
+    useEffect(() => {
+        if (window.innerWidth < 768) setDpr(1);
+    }, []);
+
     return (
         <div className="w-full h-full absolute inset-0">
-            <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 14], fov: 35 }}>
+            <Canvas dpr={dpr} camera={{ position: [0, 0, 14], fov: 35 }}>
                 <fog attach="fog" args={['#050505', 8, 30]} />
                 <ambientLight intensity={0.5} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />

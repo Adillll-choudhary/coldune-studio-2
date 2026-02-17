@@ -203,9 +203,14 @@ interface FloatingPortfolioProps {
 }
 
 export default function FloatingPortfolio({ onSelectProject }: FloatingPortfolioProps) {
+    const [dpr, setDpr] = useState(1.5);
+    useEffect(() => {
+        if (window.innerWidth < 768) setDpr(1);
+    }, []);
+
     return (
         <div className="w-full h-full absolute inset-0">
-            <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 15], fov: 45 }}>
+            <Canvas dpr={dpr} camera={{ position: [0, 0, 15], fov: 45 }}>
                 <fog attach="fog" args={['#050505', 10, 40]} />
                 <ambientLight intensity={0.5} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
