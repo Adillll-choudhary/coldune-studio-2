@@ -12,28 +12,10 @@ export default function Hero() {
     const { scrollY } = useScroll();
     const { isMobile, isLowPower } = usePerformance();
 
-    const [hasPreloaded, setHasPreloaded] = useState(false);
+    const [hasPreloaded, setHasPreloaded] = useState(true);
 
-    useEffect(() => {
-        const handlePreloaderComplete = () => {
-            setHasPreloaded(true);
-        };
-        // Check if preloader already finished
-        if (typeof window !== 'undefined' && (window as any).preloaderDone) {
-            setHasPreloaded(true);
-        }
-        window.addEventListener("preloader-complete", handlePreloaderComplete);
-
-        // Safety timeout to ensure hero shows up even if preloader fails
-        const safetyTimer = setTimeout(() => {
-            setHasPreloaded(true);
-        }, 2000);
-
-        return () => {
-            window.removeEventListener("preloader-complete", handlePreloaderComplete);
-            clearTimeout(safetyTimer);
-        };
-    }, []);
+    // Removed preloader effect
+    // useEffect(() => { ... }, []);
 
     // Parallax and Opacity shifts
     const y1 = useTransform(scrollY, [0, 500], [0, 200]);

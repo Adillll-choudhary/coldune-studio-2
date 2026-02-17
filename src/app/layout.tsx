@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Cursor from "@/components/ui/Cursor";
-import Preloader from "@/components/ui/Preloader";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/layout/SmoothScroll";
@@ -88,7 +87,6 @@ export default function RootLayout({
       <body
         className="antialiased bg-background text-text-primary overflow-x-hidden selection:bg-accent selection:text-black"
       >
-        <Preloader />
         <Cursor />
         <div className="noise-overlay" />
         <SmoothScroll>
