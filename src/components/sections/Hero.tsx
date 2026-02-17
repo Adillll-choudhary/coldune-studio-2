@@ -37,8 +37,7 @@ export default function Hero() {
                 </div>
 
                 {/* Desktop: Video Background with Poster */}
-                {/* Disable video if mobile OR low power mode detected */}
-                {!isMobile && !isLowPower && (
+                {!isMobile && (
                     <motion.div
                         style={{ y: y1, scale }}
                         initial={{ scale: 1.15, opacity: 0 }}

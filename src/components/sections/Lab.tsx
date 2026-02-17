@@ -105,7 +105,7 @@ export default function Lab() {
         <section id="lab" className="py-32 relative bg-[#030304] overflow-hidden" ref={containerRef} onMouseMove={handleMouseMove}>
             {/* Background Video - Earth */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                {!isMobile && !isLowPower ? (
+                {!isMobile ? (
                     <video
                         autoPlay
                         loop

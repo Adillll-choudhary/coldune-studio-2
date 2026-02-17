@@ -33,7 +33,7 @@ export default function About() {
                     style={{ scale, rotate: rotateLeft }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    {!isMobile && !isLowPower ? (
+                    {!isMobile ? (
                         <video
                             autoPlay
                             loop
@@ -66,7 +66,7 @@ export default function About() {
                     style={{ scale }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(255,255,255,0.05)] group md:-mt-12 cursor-pointer"
                 >
-                    {!isMobile && !isLowPower ? (
+                    {!isMobile ? (
                         <video
                             autoPlay
                             loop
@@ -98,7 +98,7 @@ export default function About() {
                     style={{ scale, rotate: rotateRight }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    {!isMobile && !isLowPower ? (
+                    {!isMobile ? (
                         <video
                             autoPlay
                             loop
