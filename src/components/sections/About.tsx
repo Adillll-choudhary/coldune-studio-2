@@ -2,18 +2,12 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 export default function About() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isMobile, setIsMobile] = useState(true);
-
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const { isMobile, isLowPower } = usePerformance();
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -39,7 +33,7 @@ export default function About() {
                     style={{ scale, rotate: rotateLeft }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    {!isMobile ? (
+                    {!isMobile && !isLowPower ? (
                         <video
                             autoPlay
                             loop
@@ -72,7 +66,7 @@ export default function About() {
                     style={{ scale }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(255,255,255,0.05)] group md:-mt-12 cursor-pointer"
                 >
-                    {!isMobile ? (
+                    {!isMobile && !isLowPower ? (
                         <video
                             autoPlay
                             loop
@@ -104,7 +98,7 @@ export default function About() {
                     style={{ scale, rotate: rotateRight }}
                     className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
                 >
-                    {!isMobile ? (
+                    {!isMobile && !isLowPower ? (
                         <video
                             autoPlay
                             loop

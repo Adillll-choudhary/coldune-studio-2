@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useScroll, animate } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import { usePerformance } from "@/hooks/usePerformance";
 import { Camera, Laptop, Play, Brush, Layout, Grid3x3, Sparkles, Cpu, ScanLine, Atom, Code2, Globe2, ArrowUpRight } from "lucide-react";
 
 // Experiment data - Bento Grid Layout Config
@@ -82,15 +83,10 @@ const experiments = [
 
 export default function Lab() {
     const [activeMode, setActiveMode] = useState<"Live Demo" | "Preview" | "Concept">("Live Demo");
-    const [isMobile, setIsMobile] = useState(true);
+    const { isMobile, isLowPower } = usePerformance();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    // Mobile detect removed - handled by hook
 
     // Mouse tilt effect
     const mouseX = useMotionValue(0);
@@ -109,7 +105,7 @@ export default function Lab() {
         <section id="lab" className="py-32 relative bg-[#030304] overflow-hidden" ref={containerRef} onMouseMove={handleMouseMove}>
             {/* Background Video - Earth */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                {!isMobile ? (
+                {!isMobile && !isLowPower ? (
                     <video
                         autoPlay
                         loop

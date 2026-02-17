@@ -3,21 +3,14 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Volume2, VolumeX, Sparkles, ArrowRight, Play } from "lucide-react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 export default function Hero() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { amount: 0.5 });
     const { scrollY } = useScroll();
-
-    const [isMobile, setIsMobile] = useState(true);
-
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const { isMobile, isLowPower } = usePerformance();
 
     const [hasPreloaded, setHasPreloaded] = useState(false);
 
@@ -62,7 +55,8 @@ export default function Hero() {
                 </div>
 
                 {/* Desktop: Video Background with Poster */}
-                {!isMobile && (
+                {/* Disable video if mobile OR low power mode detected */}
+                {!isMobile && !isLowPower && (
                     <motion.div
                         style={{ y: y1, scale }}
                         initial={{ scale: 1.15, opacity: 0 }}
