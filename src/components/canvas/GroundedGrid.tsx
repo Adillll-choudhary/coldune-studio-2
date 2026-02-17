@@ -242,7 +242,10 @@ export default function GroundedGrid({ onSelectProject }: { onSelectProject: (p:
     const [isVisible, setIsVisible] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const [isMobile, setIsMobile] = useState(false);
+
     useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
         const observer = new IntersectionObserver(
             ([entry]) => setIsVisible(entry.isIntersecting),
             { threshold: 0.1 }
@@ -250,6 +253,8 @@ export default function GroundedGrid({ onSelectProject }: { onSelectProject: (p:
         if (containerRef.current) observer.observe(containerRef.current);
         return () => observer.disconnect();
     }, []);
+
+    if (isMobile) return null; // Completely disable this heavy grid on mobile
 
     return (
         <div ref={containerRef} className="w-full h-full absolute inset-0 bg-gradient-to-b from-[#0B0D10] to-[#14171C]">

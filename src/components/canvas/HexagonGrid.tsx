@@ -34,6 +34,7 @@ const rawProjects = [
 const projects = rawProjects.map((p, i) => ({
     id: i,
     image: `/work/${p.file}`,
+    file: p.file,
     title: p.file.split('.')[0].replace(/-/g, ' '),
     category: p.category,
     type: p.type as 'image' | 'video'
@@ -117,7 +118,7 @@ function HexagonShape({ args = [1, 0.4] }: { args?: [number, number] }) {
     return shape;
 }
 
-function HexagonCard({ project, position, index }: { project: typeof projects[0], position: [number, number, number], index: number }) {
+function HexagonCard({ project, position, index, isMobile }: { project: typeof projects[0], position: [number, number, number], index: number, isMobile: boolean }) {
     const group = useRef<THREE.Group>(null!);
     const mesh = useRef<THREE.Mesh>(null!);
     const [hovered, setHovered] = useState(false);
@@ -183,7 +184,8 @@ function HexagonCard({ project, position, index }: { project: typeof projects[0]
             <group position={[0, 0, 0.36]} rotation={[0, 0, Math.PI / 6]}>
                 <mesh>
                     <shapeGeometry args={[shape]} />
-                    {project.type === 'video' ? (
+                    {/* On mobile, fallback to image even if it is a video type to save memory */}
+                    {!isMobile && project.type === 'video' ? (
                         hovered ? (
                             <Suspense fallback={<meshBasicMaterial color="#14171C" />}>
                                 <VideoTexture url={project.image} opacity={1} />
@@ -193,7 +195,8 @@ function HexagonCard({ project, position, index }: { project: typeof projects[0]
                         )
                     ) : (
                         <Suspense fallback={<meshBasicMaterial color="#1C1F26" />}>
-                            <ImageTexture url={project.image} />
+                            {/* If video on mobile, we might want a poster here, effectively using the image texture */}
+                            <ImageTexture url={project.type === 'video' ? `/work/${project.file.replace('.mov', '.jpg').replace('.mp4', '.jpg')}` : project.image} />
                         </Suspense>
                     )}
                 </mesh>
@@ -221,7 +224,7 @@ function HexagonCard({ project, position, index }: { project: typeof projects[0]
     );
 }
 
-function HoneycombLayout() {
+function HoneycombLayout({ isMobile }: { isMobile: boolean }) {
     // Determine grid layout based on screen width roughly in 3D units
     const { viewport } = useThree();
     const cols = viewport.width > 20 ? 5 : viewport.width > 12 ? 4 : 2;
@@ -247,16 +250,22 @@ function HoneycombLayout() {
     return (
         <group>
             {items.map((item, i) => (
-                <HexagonCard key={item.id} project={item} position={item.pos} index={i} />
+                <HexagonCard key={item.id} project={item} position={item.pos} index={i} isMobile={isMobile} />
             ))}
         </group>
     );
 }
 
 export default function HexagonGrid() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+    }, []);
+
     return (
         <div className="w-full h-full absolute inset-0 bg-gradient-to-b from-[#0B0D10] to-[#14171C]">
-            <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 18], fov: 35 }} shadows>
+            <Canvas dpr={isMobile ? [1, 1] : [1, 2]} camera={{ position: [0, 0, 18], fov: 35 }} shadows={!isMobile}>
                 <color attach="background" args={["#0B0D10"]} />
                 <fog attach="fog" args={['#0B0D10', 15, 35]} />
 
@@ -265,8 +274,8 @@ export default function HexagonGrid() {
                 <pointLight position={[-10, -10, -10]} intensity={0.5} color="#3A3F48" />
 
                 <Suspense fallback={null}>
-                    <HoneycombLayout />
-                    <ContactShadows position={[0, -8, 0]} opacity={0.6} scale={40} blur={2} far={10} color="#000" />
+                    <HoneycombLayout isMobile={isMobile} />
+                    {!isMobile && <ContactShadows position={[0, -8, 0]} opacity={0.6} scale={40} blur={2} far={10} color="#000" />}
                     <Environment preset="city" />
                 </Suspense>
             </Canvas>

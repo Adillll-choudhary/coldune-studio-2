@@ -68,7 +68,7 @@ function ServiceItem({ service, index }: { service: any, index: number }) {
     );
 }
 
-function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false }: { title: string, icon: any, services: any[], ghostText: string, delay: number, accent?: boolean }) {
+function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false, isMobile = false }: { title: string, icon: any, services: any[], ghostText: string, delay: number, accent?: boolean, isMobile?: boolean }) {
     const ref = useRef<HTMLDivElement>(null);
     const x = useMotionValue(0.5);
     const y = useMotionValue(0.5);
@@ -77,11 +77,17 @@ function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false 
     const rotateY = useSpring(useTransform(x, [0, 1], [-4, 4]), { stiffness: 100, damping: 20 });
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (!ref.current) return;
+        if (!ref.current || isMobile) return;
         const rect = ref.current.getBoundingClientRect();
         x.set((e.clientX - rect.left) / rect.width);
         y.set((e.clientY - rect.top) / rect.height);
     };
+
+    // simplified mobile check passed from parent or internal
+    // However, to avoid prop drilling, we can just check window width or use a prop.
+    // Let's rely on the fact that on mobile 'mousemove' isn't really a primary interaction.
+    // But we should reset rotation on touch end if we supported touch.
+    // For now, let's just make the stiffness/damping cleaner or disable if 'isMobile' is passed.
 
     return (
         <motion.div
@@ -146,6 +152,15 @@ function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false 
 }
 
 export default function Services() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <section id="services" className="py-24 md:py-44 relative bg-[#0B0D10] overflow-hidden">
             {/* Cinematic Background Elements */}
@@ -211,6 +226,7 @@ export default function Services() {
                         ghostText="CREATE"
                         services={creativeServices}
                         delay={0.1}
+                        isMobile={isMobile}
                     />
 
                     {/* Pillar 2: Tech (Center) */}
@@ -221,6 +237,7 @@ export default function Services() {
                         services={techServices}
                         delay={0.2}
                         accent={true}
+                        isMobile={isMobile}
                     />
 
                     {/* Pillar 3: Growth */}
@@ -230,6 +247,7 @@ export default function Services() {
                         ghostText="SCALE"
                         services={growthServices}
                         delay={0.3}
+                        isMobile={isMobile}
                     />
                 </div>
 
@@ -256,8 +274,6 @@ export default function Services() {
                     </div>
                 </motion.div>
             </div>
-
-
         </section>
     );
 }

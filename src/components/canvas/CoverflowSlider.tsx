@@ -70,7 +70,8 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
         const rotateY = isActive ? 0 : offset * -35; // Stronger angle to show "spine" of side cards
         const scale = isActive ? 1.0 : Math.max(0.7, 1 - absOffset * 0.1);
         const opacity = isActive ? 1 : Math.max(0.6, 1 - absOffset * 0.1); // Keep high opacity
-        const blur = isActive ? 0 : absOffset * 1; // Minimal blur
+        // Reduced blur on mobile
+        const blur = isActive ? 0 : (isMobile ? absOffset * 0.5 : absOffset * 1);
         const brightness = isActive ? 1.0 : Math.max(0.5, 0.8 - absOffset * 0.1);
 
         return {
@@ -108,8 +109,8 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                     transformStyle: "preserve-3d",
                                 }}
                             >
-                                {/* Card Container - Vision Glass Style */}
-                                <div className="relative w-[280px] md:w-[320px] h-[420px] md:h-[480px] rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] group transform-gpu">
+                                {/* Card Container - Vision Glass Style - Simplified for Mobile */}
+                                <div className={`relative w-[280px] md:w-[320px] h-[420px] md:h-[480px] rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 ${isMobile ? '' : 'backdrop-blur-2xl'} shadow-[0_20px_50px_rgba(0,0,0,0.5)] group transform-gpu`}>
 
                                     {/* Glass Reflection/Sheen */}
                                     <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-50 z-20 pointer-events-none" />
