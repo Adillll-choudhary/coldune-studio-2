@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import CoverflowSlider from "@/components/canvas/CoverflowSlider";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
@@ -28,7 +28,12 @@ const slideBackgrounds = [
 
 export default function Work() {
     const [activeSlide, setActiveSlide] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
@@ -123,7 +128,7 @@ export default function Work() {
             <div className="relative w-full z-20 overflow-visible py-10">
                 {/* 3D Coverflow Slider */}
                 <ErrorBoundary componentName="Work Gallery">
-                    <CoverflowSlider onSlideChange={setActiveSlide} />
+                    {isMounted && <CoverflowSlider onSlideChange={setActiveSlide} />}
                 </ErrorBoundary>
 
                 {/* Decorative Side Glows - Enhanced */}
