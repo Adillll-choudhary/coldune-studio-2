@@ -106,7 +106,8 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                 transition={{ type: "spring", stiffness: 120, damping: 20, mass: 1 }}
                                 onClick={() => setActiveIndex(index)}
                                 style={{
-                                    transformStyle: "preserve-3d",
+                                    transformStyle: isMobile ? "flat" : "preserve-3d", // Flatten on mobile
+                                    zIndex: 100 - Math.abs(index - activeIndex), // Explicit z-index
                                 }}
                             >
                                 {/* Card Container - Vision Glass Style - Simplified for Mobile */}
@@ -125,8 +126,11 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                                 muted
                                                 loop
                                                 playsInline
-                                                autoPlay={activeIndex === index} // Only autoplay active
-                                                preload={Math.abs(index - activeIndex) <= 1 ? "auto" : "none"}
+                                                // Mobile Optimization: Only play active video, no preload for others
+                                                autoPlay={activeIndex === index}
+                                                preload={activeIndex === index ? "auto" : "none"}
+                                                // If mobile, strictly only render video source if active to save memory
+                                                style={{ display: (isMobile && activeIndex !== index) ? 'none' : 'block' }}
                                                 onError={(e) => {
                                                     console.error("Video load failed", project.file);
                                                     e.currentTarget.style.display = 'none';
@@ -141,6 +145,13 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                             />
                                         )}
                                     </div>
+
+                                    {/* Fallback Image for Video on Mobile (when video is hidden) */}
+                                    {project.type === "video" && isMobile && activeIndex !== index && (
+                                        <div className="absolute inset-0 z-0 bg-neutral-900 flex items-center justify-center">
+                                            <Play className="text-white/20" size={48} />
+                                        </div>
+                                    )}
 
                                     {/* Vignette */}
                                     <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 z-10" />

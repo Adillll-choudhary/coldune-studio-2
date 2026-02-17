@@ -159,6 +159,7 @@ body {
   color: #F8FAFC;
   cursor: none;
   /* Hide default cursor to show custom one */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Smooth Scrolling Container */
