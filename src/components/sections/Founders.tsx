@@ -11,7 +11,7 @@ const founders = [
         name: "Jamal Adil",
         role: "Founder & Visionary",
         age: 19,
-        image: "/founders/adil%20founder.PNG",
+        image: "/founders/adil founder.PNG",
         badge: "The Visionary",
         bio: [
             <span key="1">At just 19 years old, <span className="text-3xl font-serif font-bold text-accent">J</span>amal Adil represents the new generation of creative entrepreneurs.</span>,
@@ -267,7 +267,7 @@ export default function Founders() {
                     <div className="flex flex-col items-center gap-6">
                         <div className="flex -space-x-6">
                             <div className="w-20 h-20 rounded-full border-4 border-[#08090B] bg-accent/20 overflow-hidden relative">
-                                <Image src="/founders/IMG_3694.PNG" alt="Jamal Adil" fill className="object-cover" />
+                                <Image src="/founders/adil founder.PNG" alt="Jamal Adil" fill className="object-cover" />
                             </div>
                             <div className="w-20 h-20 rounded-full border-4 border-[#08090B] bg-white/10 overflow-hidden relative">
                                 <Image src="/founders/IMG_3498.PNG" alt="Arslan" fill className="object-cover" />

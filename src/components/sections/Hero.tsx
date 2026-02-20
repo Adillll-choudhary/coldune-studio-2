@@ -83,36 +83,52 @@ export default function Hero() {
                     >
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         <span className="text-accent font-mono text-[8px] md:text-[10px] tracking-[0.4em] md:tracking-[0.6em] uppercase">System Online</span>
+                        {/* Mobile Only Metadata */}
+                        <span className="md:hidden text-white/20 font-mono text-[8px] tracking-[0.2em] uppercase border-l border-white/10 pl-3 italic">
+                            [Nexus_Core]
+                        </span>
                     </motion.div>
 
                     {/* Elite Typography Heading */}
                     <div className="relative flex flex-col justify-center z-20">
                         {/* Top Line */}
                         <motion.div
-                            className="flex items-center gap-2 md:gap-6 mb-4 md:mb-6"
+                            className="flex items-center gap-2 md:gap-6 mb-2 md:mb-6"
                             initial={{ opacity: 0, x: -50 }}
                             animate={hasPreloaded ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
                             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 1 }}
                         >
                             <div className="w-6 md:w-12 h-[1px] bg-accent/60 shadow-[0_0_10px_rgba(172,200,162,0.5)]" />
-                            <h2 className="text-[8px] sm:text-[9px] md:text-xl font-mono font-bold text-white/50 tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.4em] uppercase">
+                            <h2 className="text-[13px] md:text-xl font-serif font-bold text-white/80 tracking-[0.1em] md:tracking-[0.4em] uppercase whitespace-nowrap italic">
                                 We don't just <span className="text-white">create content</span>
                             </h2>
                         </motion.div>
 
                         {/* Main Title Block */}
                         <div className="relative mt-4 md:mt-0">
+                            {/* Mobile Scanning Line Effect - Hidden on PC */}
+                            <motion.div
+                                initial={{ scaleX: 0, opacity: 0 }}
+                                animate={{ scaleX: 1, opacity: 0.2 }}
+                                transition={{ duration: 2, delay: 2 }}
+                                className="md:hidden absolute top-[-50%] left-0 w-full h-[1px] bg-accent z-40 overflow-hidden"
+                            >
+                                <div className="w-full h-full bg-gradient-to-r from-transparent via-white to-transparent animate-marquee" />
+                            </motion.div>
+
                             <div className="relative group pointer-events-auto">
                                 {/* 'we create' - Absolutely positioned relative to IMPACT */}
                                 <motion.div
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={hasPreloaded ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 1.2, ease: "circOut", delay: 1.5 }}
-                                    className="absolute -top-[24%] left-[2%] md:-top-[28%] md:left-[5%] z-30 pointer-events-none"
+                                    className="absolute -top-[50%] left-[3%] md:-top-[28%] md:left-[5%] z-30 pointer-events-none"
                                 >
-                                    <span className="font-serif italic text-[5vw] sm:text-[4.5vw] md:text-[4vw] text-accent font-light tracking-wide drop-shadow-[0_2px_10px_rgba(172,200,162,0.5)]">
-                                        we create
-                                    </span>
+                                    <div className="flex flex-col">
+                                        <span className="font-serif italic text-[8vw] sm:text-[4.5vw] md:text-[4vw] text-accent font-light tracking-wide drop-shadow-[0_2px_15px_rgba(172,200,162,0.6)]">
+                                            we create
+                                        </span>
+                                    </div>
                                 </motion.div>
 
                                 {/* 'IMPACT' The Hero */}
@@ -124,12 +140,15 @@ export default function Hero() {
                                         ease: [0.16, 1, 0.3, 1],
                                         delay: 1.2
                                     }}
-                                    className="relative z-20 font-serif font-black italic text-[17vw] md:text-[17vw] leading-[0.8] md:leading-[0.8] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white/95 to-white/40 select-none"
+                                    className="relative z-20 font-serif font-black italic text-[18vw] md:text-[17vw] leading-[0.8] md:leading-[0.8] tracking-tighter md:tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white/95 to-white/40 select-none pb-2"
                                 >
                                     IMPACT
                                 </motion.h1>
 
-                                {/* Interactive Glow Layer */}
+                                {/* Mobile Specific Glow - Extra layer for phones */}
+                                <div className="md:hidden absolute inset-0 bg-accent/20 blur-[60px] rounded-full z-[-1] opacity-40 animate-pulse-slow" />
+
+                                {/* Interactive Glow Layer (Desktop Hover) */}
                                 <div className="absolute inset-0 bg-accent/10 blur-[120px] rounded-full z-[-1] opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out" />
                             </div>
                         </div>
@@ -140,24 +159,28 @@ export default function Hero() {
                         initial={{ opacity: 0 }}
                         animate={hasPreloaded ? { opacity: 1 } : { opacity: 0 }}
                         transition={{ delay: 2.2, duration: 1 }}
-                        className="flex flex-col md:flex-row items-start gap-4 md:gap-8 mt-8 md:mt-16 ml-0 md:ml-4"
+                        className="flex flex-col md:flex-row items-start gap-4 md:gap-8 mt-12 md:mt-16 ml-0 md:ml-4"
                     >
-                        <div className="space-y-3 md:space-y-4">
-                            <p className="text-[10px] md:text-sm text-accent/80 font-mono tracking-[0.3em] md:tracking-[0.4em] uppercase">
-                                [CREATIVE_ENGINEERING_UNIT]
-                            </p>
-                            <p className="text-xs md:text-base text-white/70 max-w-md leading-relaxed font-light tracking-wide">
-                                Precision-crafted digital experiences that don't just look good—they perform, convert, and dominate.
+                        <div className="space-y-4 md:space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="md:hidden w-8 h-[1px] bg-accent/30" />
+                                <p className="text-[9px] md:text-sm text-accent font-mono tracking-[0.4em] uppercase font-bold">
+                                    [CREATIVE_ENGINEERING]
+                                </p>
+                            </div>
+                            <p className="text-[11px] md:text-base text-white/60 max-w-md leading-relaxed font-light tracking-wide border-l border-accent/10 pl-4 md:border-0 md:pl-0">
+                                Precision-crafted digital experiences that don't just look good—they perform, convert, and <span className="text-white italic">dominate.</span>
                             </p>
                         </div>
 
                         {/* Tactical CTAs - Enabled Pointer Events */}
-                        <div className="flex items-center gap-4 md:gap-8 pointer-events-auto">
+                        <div className="flex items-center gap-4 md:gap-8 pointer-events-auto mt-4 md:mt-0">
                             <a
                                 href="#work"
-                                className="group relative px-6 md:px-8 py-3 md:py-4 overflow-hidden border border-white/20 rounded-full hover:border-white/50 transition-colors"
+                                className="group relative px-8 md:px-8 py-4 md:py-4 overflow-hidden border border-accent/30 bg-accent/5 rounded-full hover:border-accent/50 transition-all duration-500"
                             >
-                                <span className="relative z-10 text-white font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.3em] group-hover:text-accent transition-colors">Enter Archive</span>
+                                <span className="relative z-10 text-white font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] group-hover:text-accent transition-colors">Enter Archive</span>
+                                <div className="absolute inset-0 bg-accent/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                             </a>
                         </div>
                     </motion.div>

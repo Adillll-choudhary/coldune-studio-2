@@ -66,17 +66,43 @@ export default function About() {
                 {/* Section Header */}
                 <motion.div
                     style={{ y: yTitle, opacity: opacityTitle }}
-                    className="mb-16 md:mb-24 text-center z-20 mix-blend-difference"
+                    className="mb-16 md:mb-32 text-center z-20 relative"
                 >
-                    <h2 className="text-[12vw] md:text-[8vw] leading-[0.8] font-serif font-black text-white/90 tracking-tighter">
-                        THE STORY
-                    </h2>
-                    <div className="mt-4 flex items-center justify-center gap-4">
-                        <div className="h-[1px] w-12 md:w-24 bg-white/30" />
-                        <span className="font-mono text-xs md:text-sm uppercase tracking-[0.3em] text-white/60">
-                            Est. 2024
-                        </span>
-                        <div className="h-[1px] w-12 md:w-24 bg-white/30" />
+                    <div className="relative inline-block">
+                        <h2 className="text-[15vw] md:text-[10vw] leading-[0.75] font-serif font-black tracking-tighter relative">
+                            {/* Masked Gradient Text using Brand Accent */}
+                            <span className="bg-gradient-to-b from-accent via-accent/80 to-accent/20 bg-clip-text text-transparent italic block transform -rotate-1">
+                                THE
+                            </span>
+                            <span className="relative inline-block mt-2 text-white">
+                                <span className="absolute inset-0 blur-3xl bg-accent/30 -z-10 rounded-full scale-150" />
+                                STORY
+                            </span>
+                        </h2>
+
+                        {/* Decorative Flourishes */}
+                        <div className="mt-8 flex items-center justify-center gap-6">
+                            <motion.div
+                                initial={{ scaleX: 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                transition={{ duration: 1.5, ease: "circOut" }}
+                                className="h-[1px] w-12 md:w-32 bg-gradient-to-r from-transparent to-accent/50"
+                            />
+                            <div className="flex flex-col items-center gap-1">
+                                <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-accent/80 font-bold">
+                                    Chronicle // 001
+                                </span>
+                                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 italic">
+                                    Established 2024
+                                </span>
+                            </div>
+                            <motion.div
+                                initial={{ scaleX: 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                transition={{ duration: 1.5, ease: "circOut" }}
+                                className="h-[1px] w-12 md:w-32 bg-gradient-to-l from-transparent to-accent/50"
+                            />
+                        </div>
                     </div>
                 </motion.div>
 
@@ -100,22 +126,16 @@ export default function About() {
                         >
                             {/* Video Background */}
                             <div className="absolute inset-0 z-0">
-                                {!showMobileLayout ? (
-                                    <video
-                                        autoPlay
-                                        loop
-                                        muted
-                                        playsInline
-                                        suppressHydrationWarning
-                                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out grayscale group-hover:grayscale-0"
-                                    >
-                                        <source src={phase.video} type="video/mp4" />
-                                    </video>
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black relative">
-                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent opacity-30" />
-                                    </div>
-                                )}
+                                <video
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    preload="auto"
+                                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out grayscale group-hover:grayscale-0"
+                                >
+                                    <source src={phase.video} />
+                                </video>
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-[#030305]/40 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" />
                             </div>
 
