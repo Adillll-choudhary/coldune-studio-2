@@ -139,6 +139,12 @@
   color: #000000;
 }
 
+@media (max-width: 768px) {
+  .noise-overlay {
+    display: none;
+  }
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;

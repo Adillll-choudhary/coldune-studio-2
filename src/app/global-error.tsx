@@ -23,7 +23,7 @@ export default function GlobalError({
                     We encountered a critical error. Please reload the page.
                 </p>
                 <button
-                    onClick={() => reset()}
+                    onClick={() => reset?.()}
                     className="px-6 py-2 rounded-full bg-accent text-black text-sm font-bold uppercase tracking-widest hover:bg-white transition-colors"
                 >
                     Try again

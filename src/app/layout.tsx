@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Cursor from "@/components/ui/Cursor";
 import Navbar from "@/components/layout/Navbar";
+import Preloader from "@/components/ui/Preloader";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import "./globals.css";
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     "Immersive Web Design", "Visual Production", "Greater Noida Agency",
     "Phase 01", "Digital Impact", "Creative R&D"
   ],
-  authors: [{ name: "Adil" }, { name: "Arslan" }],
+  authors: [{ name: "Jamal Adil" }, { name: "Arslan" }],
   creator: "Coldune Studio",
   icons: {
     icon: [
@@ -88,6 +89,7 @@ export default function RootLayout({
         className="antialiased bg-background text-text-primary overflow-x-hidden selection:bg-accent selection:text-black"
       >
         <Cursor />
+        <Preloader />
         <div className="noise-overlay" />
         <SmoothScroll>
           <Navbar />

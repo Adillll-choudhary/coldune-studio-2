@@ -64,7 +64,7 @@ export default function Navbar() {
                 )}
             >
                 <div className="container mx-auto px-6 h-full flex justify-between items-center relative">
-                    <Link href="/" className="z-50 absolute left-6 top-0 h-20 md:h-28 w-auto aspect-[3/1]">
+                    <Link href="/" className="z-50 relative h-16 md:h-36 md:top-4 w-auto aspect-[3/1] flex-shrink-0">
                         <motion.div
                             className="h-full w-full relative"
                             whileHover={{
@@ -83,9 +83,6 @@ export default function Navbar() {
                             />
                         </motion.div>
                     </Link>
-
-                    {/* Spacer to push menu right since logo is absolute */}
-                    <div className="w-24 md:w-32 lg:w-40"></div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8">

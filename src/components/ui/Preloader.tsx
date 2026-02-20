@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Preloader() {
@@ -9,33 +9,45 @@ export default function Preloader() {
     const [isLoadDone, setIsLoadDone] = useState(false);
     const [particles, setParticles] = useState<{ x: number, y: number, opacity: number, scale: number, duration: number }[]>([]);
 
-    // Audio removed for mobile stability
-
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
+        const isMobile = window.innerWidth < 768;
+
+        // Initialize Audio
+        audioRef.current = new Audio("/audio/scifi_theme.mp3");
+        audioRef.current.loop = true;
+        audioRef.current.volume = isMobile ? 0.3 : 0.4;
+
         // Capture early interaction to unlock audio engine
         const unlockAudio = () => {
             if (hasInteracted) return;
             const context = new (window.AudioContext || (window as any).webkitAudioContext)();
             if (context.state === 'suspended') context.resume();
+
+            if (audioRef.current) {
+                audioRef.current.play().catch(() => console.log("Audio play failed"));
+            }
+
             setHasInteracted(true);
             window.removeEventListener("mousedown", unlockAudio);
             window.removeEventListener("keydown", unlockAudio);
+            window.removeEventListener("touchstart", unlockAudio);
         };
+
         window.addEventListener("mousedown", unlockAudio);
         window.addEventListener("keydown", unlockAudio);
+        window.addEventListener("touchstart", unlockAudio);
 
         // Body Scroll Lock
         if (isLoading) {
             document.body.style.overflow = "hidden";
             document.body.style.height = "100svh";
-        } else {
-            document.body.style.overflow = "";
-            document.body.style.height = "";
         }
 
-        // Generate particles only on client to avoid hydration mismatch
-        const newParticles = [...Array(25)].map(() => ({
+        // Generate particles - fewer on mobile
+        const particleCount = isMobile ? 12 : 25;
+        const newParticles = [...Array(particleCount)].map(() => ({
             x: Math.random() * window.innerWidth,
             y: Math.random() * window.innerHeight,
             opacity: Math.random(),
@@ -44,31 +56,37 @@ export default function Preloader() {
         }));
         setParticles(newParticles);
 
-        // Simulate loading time
+        // Faster loading on mobile to reduce wait time
+        const loadingTime = isMobile ? 2200 : 3500;
         const timer = setTimeout(() => {
             setIsLoadDone(true);
             setIsLoading(false);
-
-            // Audio removed
-
 
             window.scrollTo(0, 0);
             (window as any).preloaderDone = true;
             window.dispatchEvent(new Event('preloader-complete'));
 
-            // Unlock scroll after shutters finish (1.5s after loading ends)
+            // Unlock scroll after shutters finish
             setTimeout(() => {
                 document.body.style.overflow = "";
                 document.body.style.height = "";
             }, 1500);
-        }, 3500);
+        }, loadingTime);
 
         return () => {
             clearTimeout(timer);
             window.removeEventListener("mousedown", unlockAudio);
             window.removeEventListener("keydown", unlockAudio);
+            window.removeEventListener("touchstart", unlockAudio);
             document.body.style.overflow = "";
             document.body.style.height = "";
+            // Keep audio playing into the site if needed, or pause it.
+            // GlobalAudioPlayer will take over, so we should bridge or pause.
+            // For now, let's pause it to prevent duplicates if GlobalAudioPlayer starts.
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
         };
     }, [isLoading, hasInteracted, isLoadDone]);
 
@@ -98,17 +116,22 @@ export default function Preloader() {
                         }}
                     />
 
-                    {/* High-Velocity Scanning Beam */}
+                    {/* Background Video */}
                     <motion.div
-                        className="absolute h-[2px] w-full bg-accent z-[110] top-1/2 -translate-y-1/2 shadow-[0_0_30px_rgba(172,200,162,1)]"
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ scaleX: 1, opacity: 1 }}
-                        exit={{
-                            scaleX: 2.5,
-                            opacity: 0,
-                            transition: { duration: 0.8, ease: "circIn" }
-                        }}
-                    />
+                        className="absolute inset-0 z-[105] overflow-hidden"
+                        exit={{ opacity: 0, transition: { duration: 0.8 } }}
+                    >
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover opacity-100"
+                        >
+                            <source src="/bg/IMG_3736.MP4" type="video/mp4" />
+                        </video>
+                        <div className="absolute inset-0 bg-transparent" />
+                    </motion.div>
 
                     {/* Entrance Flash Overlay */}
                     <motion.div
@@ -161,37 +184,14 @@ export default function Preloader() {
 
                         {/* Central Core - Black Hole / Portal */}
                         <div className="relative w-64 h-64 md:w-96 md:h-96 flex items-center justify-center">
-                            {/* Orbiting Rings */}
-                            <motion.div
-                                className="absolute inset-0 rounded-full border border-white/10"
-                                animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            />
-                            <motion.div
-                                className="absolute inset-4 rounded-full border border-white/20 border-t-accent/50"
-                                animate={{ rotate: -360 }}
-                                transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
-                            />
-                            <motion.div
-                                className="absolute inset-16 rounded-full border border-white/5 border-b-white/30"
-                                animate={{ rotate: 180 }}
-                                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-                            />
-
-                            {/* Core Energy */}
-                            <motion.div
-                                className="w-20 h-20 bg-white rounded-full blur-[50px] mix-blend-screen"
-                                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0.8, 0.5] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                                <span className="text-accent font-mono text-[10px] tracking-[0.5em] animate-pulse">
-                                    INITIALIZING
-                                </span>
-                                <span className="text-white/40 font-mono text-[8px] tracking-[0.3em] uppercase">
-                                    Loading Nexus Assets...
-                                </span>
-                            </div>
+                            {/* Minimal Branding */}
+                            <motion.span
+                                animate={{ opacity: [0.2, 0.5, 0.2] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="text-white/20 font-mono text-[8px] tracking-[1em] uppercase"
+                            >
+                                Coldune Studio // 4K_Uplink
+                            </motion.span>
                         </div>
 
                         {/* Progress Bar & Data */}
@@ -201,7 +201,7 @@ export default function Preloader() {
                                     [ WEAR HEADPHONES FOR BETTER EXPERIENCE ]
                                 </span>
                                 <div className="flex justify-between w-full text-[10px] font-sans font-medium text-white/60 uppercase tracking-widest">
-                                    <span>System Check</span>
+                                    <span>System Diagnostics</span>
                                     <motion.span
                                         animate={{ opacity: [1, 0.5, 1] }}
                                         transition={{ repeat: Infinity, duration: 0.5 }}
@@ -211,12 +211,12 @@ export default function Preloader() {
                                 </div>
                             </div>
 
-                            <div className="h-[1px] w-full bg-white/10 relative overflow-hidden">
+                            <div className="h-[2px] w-full bg-white/5 relative overflow-hidden rounded-full">
                                 <motion.div
-                                    className="absolute inset-y-0 left-0 bg-accent shadow-[0_0_10px_rgba(172,200,162,0.8)]"
+                                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent/50 via-accent to-accent/50 shadow-[0_0_20px_rgba(172,200,162,1)]"
                                     initial={{ width: "0%" }}
                                     animate={{ width: "100%" }}
-                                    transition={{ duration: 3, ease: "easeInOut" }}
+                                    transition={{ duration: 3.2, ease: "easeInOut" }}
                                 />
                             </div>
 

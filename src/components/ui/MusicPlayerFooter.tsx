@@ -7,7 +7,7 @@ import Image from "next/image";
 const tracks = [
     {
         title: "Coldune Studio",
-        artist: "Adil - Founder",
+        artist: "Jamal Adil - Founder",
         image: "/bg/IMG_3705.PNG", // Updated image
         duration: "03:45"
     },
@@ -33,7 +33,7 @@ export function MusicPlayerFooter() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="relative z-10 w-full max-w-5xl h-[500px] md:h-[600px] bg-[#1A2118] border border-[#ACC8A2]/10 rounded-[40px] overflow-hidden shadow-2xl flex flex-col md:flex-row"
+                className="relative z-10 w-full max-w-5xl h-[850px] md:h-[600px] bg-[#1A2118] border border-[#ACC8A2]/10 rounded-[40px] overflow-hidden shadow-2xl flex flex-col md:flex-row"
             >
                 {/* Left Content (Text) */}
                 <div className="flex-1 p-8 md:p-16 flex flex-col justify-center relative z-20">
@@ -47,7 +47,7 @@ export function MusicPlayerFooter() {
                         </h2>
                         <div className="flex flex-col gap-1">
                             <p className="text-xl md:text-2xl text-white/60 font-serif italic">
-                                Adil & Arslan
+                                Jamal Adil & Arslan
                             </p>
                             <p className="text-sm text-white/40 font-mono tracking-widest uppercase">
                                 Coldune Studio
@@ -67,23 +67,23 @@ export function MusicPlayerFooter() {
                     <div className="relative w-[400px] md:w-[600px] h-full flex items-end">
 
                         {/* Founder 1 (Left - Arslan) */}
-                        <div className="absolute left-0 md:left-10 bottom-0 w-[240px] h-[430px] md:w-[350px] md:h-[530px] z-10">
+                        <div className="absolute left-0 md:left-10 bottom-0 w-[240px] h-[430px] md:w-[350px] md:h-[530px] z-50 md:z-10">
                             <Image
                                 src="/bg/IMG_3704.PNG" // Arslan
                                 alt="Arslan - Founder"
                                 fill
-                                className="object-cover object-top mix-blend-screen saturate-0 contrast-125" // Blending black bg into olive
+                                className="object-cover object-top drop-shadow-2xl md:drop-shadow-none md:mix-blend-screen md:saturate-0 md:contrast-125"
                                 priority
                             />
                         </div>
 
                         {/* Founder 2 (Right - Adil) - Overlapping */}
-                        <div className="absolute right-0 md:right-10 bottom-0 w-[260px] h-[450px] md:w-[360px] md:h-[550px] z-0 opacity-90">
+                        <div className="absolute right-0 md:right-10 bottom-0 w-[260px] h-[450px] md:w-[360px] md:h-[550px] z-0 md:z-0 md:opacity-90">
                             <Image
                                 src="/bg/IMG_3705.PNG" // Adil
-                                alt="Adil - Founder"
+                                alt="Jamal Adil - Founder"
                                 fill
-                                className="object-cover object-top mix-blend-screen saturate-0 contrast-125" // Blending black bg into olive
+                                className="object-cover object-top drop-shadow-2xl md:drop-shadow-none md:mix-blend-screen md:saturate-0 md:contrast-125"
                                 priority
                             />
                         </div>

@@ -1,199 +1,198 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { usePerformance } from "@/hooks/usePerformance";
+
+const PHASES = [
+    {
+        id: "01",
+        title: "Genesis",
+        subtitle: "The Spark",
+        description: "A rebellion against the static. We found beauty in the chaos of code and nature, planting the seeds of a digital revolution.",
+        video: "/bg/story-forest.mp4",
+        color: "bg-emerald-500",
+        accent: "text-emerald-400"
+    },
+    {
+        id: "02",
+        title: "Alchemy",
+        subtitle: "The Forge",
+        description: "Forging raw potential into kinetic reality. We bridge the gap between art and engineering, turning abstract concepts into tangible magic.",
+        video: "/bg/firefly.mp4",
+        color: "bg-blue-500",
+        accent: "text-blue-400"
+    },
+    {
+        id: "03",
+        title: "Horizon",
+        subtitle: "The Legacy",
+        description: "Beyond pixels. Building digital empires that stand the test of time. We don't just create websites; we architect experiences.",
+        video: "/bg/0216.mp4",
+        color: "bg-purple-500",
+        accent: "text-purple-400"
+    }
+];
 
 export default function About() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { isMobile, isLowPower } = usePerformance();
+    const { isMobile } = usePerformance();
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const showMobileLayout = mounted && isMobile;
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"],
     });
 
-    const yParallax = useTransform(scrollYProgress, [0, 1], [100, -100]);
-    const rotateLeft = useTransform(scrollYProgress, [0, 1], [0, -5]);
-    const rotateRight = useTransform(scrollYProgress, [0, 1], [0, 5]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
+    const yTitle = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    const opacityTitle = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
     return (
-        <section ref={containerRef} id="about" className="relative min-h-[150vh] py-32 flex flex-col items-center justify-center overflow-hidden bg-[#050505]">
+        <section ref={containerRef} id="about" className="relative min-h-screen py-32 flex flex-col items-center justify-center overflow-hidden bg-[#030305]">
 
-            {/* Background Texture - Clean Void */}
-            <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/5 via-black to-black opacity-40" />
+            {/* Ambient Background */}
+            <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/20 via-[#030305] to-[#030305] pointer-events-none" />
 
-            {/* TRI-MONOLITHS CONTAINER */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 relative z-10 w-full px-4">
+            <div className="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-center">
 
-                {/* MONOLITH 1 - Origin (Nature) */}
+                {/* Section Header */}
                 <motion.div
-                    style={{ scale, rotate: rotateLeft }}
-                    className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
+                    style={{ y: yTitle, opacity: opacityTitle }}
+                    className="mb-16 md:mb-24 text-center z-20 mix-blend-difference"
                 >
-                    {!isMobile ? (
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
+                    <h2 className="text-[12vw] md:text-[8vw] leading-[0.8] font-serif font-black text-white/90 tracking-tighter">
+                        THE STORY
+                    </h2>
+                    <div className="mt-4 flex items-center justify-center gap-4">
+                        <div className="h-[1px] w-12 md:w-24 bg-white/30" />
+                        <span className="font-mono text-xs md:text-sm uppercase tracking-[0.3em] text-white/60">
+                            Est. 2024
+                        </span>
+                        <div className="h-[1px] w-12 md:w-24 bg-white/30" />
+                    </div>
+                </motion.div>
+
+                {/* Interactive Portal Grid */}
+                <div className="w-full h-[150vh] md:h-[70vh] flex flex-col md:flex-row gap-4 md:gap-4 relative">
+                    {PHASES.map((phase, index) => (
+                        <motion.div
+                            key={phase.id}
+                            onHoverStart={() => setHoveredIndex(index)}
+                            onHoverEnd={() => setHoveredIndex(null)}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                            className={`
+                                relative flex-1 group cursor-pointer overflow-hidden rounded-2xl md:rounded-3xl border border-white/5 
+                                transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
+                                ${hoveredIndex === index ? 'md:flex-[2]' : 'md:flex-1'}
+                                ${hoveredIndex !== null && hoveredIndex !== index ? 'md:opacity-50 blur-[2px] md:scale-95' : 'md:opacity-100 md:scale-100'}
+                            `}
                         >
-                            <source src="/bg/story-forest.mp4" type="video/mp4" />
-                        </video>
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-green-900/20 via-black to-black" />
-                    )}
+                            {/* Video Background */}
+                            <div className="absolute inset-0 z-0">
+                                {!showMobileLayout ? (
+                                    <video
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        suppressHydrationWarning
+                                        className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 ease-out grayscale group-hover:grayscale-0"
+                                    >
+                                        <source src={phase.video} type="video/mp4" />
+                                    </video>
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black relative">
+                                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent opacity-30" />
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-[#030305]/40 to-transparent opacity-90 group-hover:opacity-60 transition-opacity duration-500" />
+                            </div>
 
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
+                            {/* Content Overlay */}
+                            <div className="absolute inset-0 z-10 p-6 md:p-10 flex flex-col justify-end items-start h-full">
 
-                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col gap-3 group-hover:-translate-y-2 transition-transform duration-500">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-1 h-8 bg-accent/80" />
-                            <span className="text-accent font-mono text-xs uppercase tracking-widest">Phase 01 // The Spark</span>
-                        </div>
-                        <p className="text-white/80 text-sm md:text-base font-light leading-relaxed">
-                            A rebellion against the static. We found beauty in the chaos of code and nature.
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* MONOLITH 2 - Evolution (Tech) */}
-                <motion.div
-                    style={{ scale }}
-                    className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(255,255,255,0.05)] group md:-mt-12 cursor-pointer"
-                >
-                    {!isMobile ? (
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out brightness-125"
-                        >
-                            <source src="/bg/firefly.mp4" type="video/mp4" />
-                        </video>
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-blue-900/20 via-black to-black" />
-                    )}
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
-
-                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col gap-3 group-hover:-translate-y-2 transition-transform duration-500">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-1 h-8 bg-white/80" />
-                            <span className="text-white/90 font-mono text-xs uppercase tracking-widest">Phase 02 // The Forge</span>
-                        </div>
-                        <p className="text-white/80 text-sm md:text-base font-light leading-relaxed">
-                            Forging raw potential into kinetic reality. Bridging the gap between art and engineering.
-                        </p>
-                    </div>
-                </motion.div>
-
-                {/* MONOLITH 3 - Ascension (Mountain/Height) */}
-                <motion.div
-                    style={{ scale, rotate: rotateRight }}
-                    className="relative w-[85vw] md:w-[22vw] aspect-[3/4] md:aspect-[9/16] rounded-[3rem] overflow-hidden border border-white/10 shadow-[0_0_100px_rgba(172,200,162,0.1)] group cursor-pointer"
-                >
-                    {!isMobile ? (
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out"
-                        >
-                            <source src="/bg/0216.mp4" type="video/mp4" />
-                        </video>
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-purple-900/20 via-black to-black" />
-                    )}
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent transition-opacity duration-500" />
-
-                    <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 flex flex-col gap-3 group-hover:-translate-y-2 transition-transform duration-500">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-1 h-8 bg-accent/80" />
-                            <span className="text-accent font-mono text-xs uppercase tracking-widest">Phase 03 // The Legacy</span>
-                        </div>
-                        <p className="text-white/80 text-sm md:text-base font-light leading-relaxed">
-                            Beyond pixels. Building digital empires that stand the test of time.
-                        </p>
-                    </div>
-                </motion.div>
-
-            </div>
-
-            {/* OVERLAY TYPOGRAPHY - Centered and Breaking */}
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none mix-blend-difference">
-                <motion.h2
-                    style={{ y: yParallax }}
-                    className="text-[15vw] md:text-[12vw] leading-none font-serif font-black text-white opacity-90 tracking-tighter text-center"
-                >
-                    THE STORY
-                </motion.h2>
-            </div>
-
-            {/* NARRATIVE CONTENT - Floating Cards */}
-            <div className="container mx-auto px-6 relative z-30 w-full h-full pointer-events-none">
-
-                {/* Left Card - Philosophy */}
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="absolute top-[5%] left-[5%] md:top-[12%] md:left-[5%] max-w-xs pointer-events-auto"
-                >
-                    <div className="flex items-center gap-4 mb-4">
-                        <span className="text-accent font-mono text-xs uppercase tracking-widest">Manifesto</span>
-                        <div className="h-[1px] w-12 bg-accent/50" />
-                    </div>
-                    <p className="text-white/80 text-lg font-light leading-relaxed">
-                        We don't chase trends. We hunt for the feeling that makes you stop and stare.
-                    </p>
-                </motion.div>
-
-                {/* Right Card - Founders */}
-                <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
-                    className="absolute bottom-[5%] right-[5%] md:bottom-[12%] md:right-[5%] max-w-xs text-right pointer-events-auto"
-                >
-                    <div className="flex items-center justify-end gap-4 mb-4">
-                        <div className="h-[1px] w-12 bg-accent/50" />
-                        <span className="text-accent font-mono text-xs uppercase tracking-widest">Adil & Arslan</span>
-                    </div>
-
-                    <div className="flex flex-col items-end gap-4">
-                        <p className="text-white/80 text-lg font-light leading-relaxed">
-                            Two minds. <br /> One obsessive vision.
-                        </p>
-
-                        <div className="flex -space-x-4">
-                            {[
-                                { src: "/founders/adil founder.PNG", alt: "Adil" },
-                                { src: "/founders/IMG_3498.PNG", alt: "Arslan" }
-                            ].map((founder, i) => (
-                                <div key={i} className="relative w-14 h-14 rounded-full border border-white/20 overflow-hidden bg-black/50 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 hover:z-10 cursor-pointer">
-                                    <Image
-                                        src={founder.src}
-                                        alt={founder.alt}
-                                        fill
-                                        className="object-cover"
-                                    />
+                                {/* Top Number */}
+                                <div className="absolute top-6 right-6 md:top-10 md:right-10 overflow-hidden">
+                                    <span className="font-mono text-4xl md:text-6xl font-bold text-white/5 group-hover:text-white/20 transition-colors duration-500">
+                                        {phase.id}
+                                    </span>
                                 </div>
-                            ))}
+
+                                {/* Text Content */}
+                                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 w-full">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className={`w-1 h-8 ${phase.color}`} />
+                                        <h3 className="font-serif text-3xl md:text-4xl text-white font-medium italic">
+                                            {phase.title}
+                                        </h3>
+                                    </div>
+
+                                    <h4 className={`font-mono text-xs uppercase tracking-widest mb-4 opacity-70 ${phase.accent}`}>
+                                        // {phase.subtitle}
+                                    </h4>
+
+                                    <p className="text-white/70 text-sm md:text-base font-light leading-relaxed max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 h-0 group-hover:h-auto overflow-hidden">
+                                        {phase.description}
+                                    </p>
+
+                                    {/* Mobile/Default view visible text (short) */}
+                                    <p className="md:hidden text-white/70 text-sm mt-2 block">
+                                        {phase.description}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Footer / Founders Signature - Floating with High Z-Index */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5, duration: 1 }}
+                    className="mt-16 md:mt-24 w-full flex justify-center md:justify-end px-4"
+                >
+                    <div className="relative group p-2 pr-6 rounded-full bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden hover:border-white/30 transition-all duration-500 cursor-pointer">
+                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                        <div className="relative flex items-center gap-4">
+                            <div className="flex -space-x-3 pl-1">
+                                {[
+                                    { src: "/founders/adil founder.PNG", alt: "Jamal Adil" },
+                                    { src: "/founders/IMG_3498.PNG", alt: "Arslan" }
+                                ].map((founder, i) => (
+                                    <div key={i} className="relative w-12 h-12 rounded-full border border-[#030305] overflow-hidden bg-black ring-2 ring-white/5 group-hover:ring-white/20 transition-all duration-300 transform group-hover:scale-110 group-hover:z-10">
+                                        <Image
+                                            src={founder.src}
+                                            alt={founder.alt}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex flex-col">
+                                <span className="text-white text-lg font-serif italic leading-none">Jamal Adil & Arslan</span>
+                                <span className="text-white/40 text-[10px] uppercase tracking-wider font-mono mt-1">Founders</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
-            </div>
 
+            </div>
         </section>
     );
 }

@@ -30,9 +30,11 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+    const [mounted, setMounted] = useState(false);
 
     // Mobile Detection
     useEffect(() => {
+        setMounted(true);
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -85,6 +87,8 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
         };
     };
 
+    if (!mounted) return null;
+
     return (
         <div className="relative w-full h-[800px] flex flex-col items-center justify-center overflow-visible">
 
@@ -117,23 +121,20 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                     <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-50 z-20 pointer-events-none" />
 
                                     {/* Image */}
-                                    <div className="absolute inset-0 z-0">
+                                    <div className="absolute inset-0 z-0 bg-neutral-900">
                                         {project.type === "video" ? (
                                             <video
                                                 ref={(el) => { videoRefs.current[index] = el; }}
                                                 src={`/work/${project.file}`}
+                                                poster={`/work/${project.file.replace(/\.(mp4|mov)$/i, '.jpg')}`}
                                                 className={`w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 ${activeIndex !== index ? 'brightness-75' : ''}`}
                                                 muted
                                                 loop
-                                                playsInline
-                                                // Mobile Optimization: Only play active video, no preload for others
+                                                playsInline={true}
                                                 autoPlay={activeIndex === index}
-                                                preload={activeIndex === index ? "auto" : "none"}
-                                                // If mobile, strictly only render video source if active to save memory
-                                                style={{ display: (isMobile && activeIndex !== index) ? 'none' : 'block' }}
+                                                preload="auto"
                                                 onError={(e) => {
                                                     console.error("Video load failed", project.file);
-                                                    e.currentTarget.style.display = 'none';
                                                 }}
                                             />
                                         ) : (
@@ -146,12 +147,7 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                         )}
                                     </div>
 
-                                    {/* Fallback Image for Video on Mobile (when video is hidden) */}
-                                    {project.type === "video" && isMobile && activeIndex !== index && (
-                                        <div className="absolute inset-0 z-0 bg-neutral-900 flex items-center justify-center">
-                                            <Play className="text-white/20" size={48} />
-                                        </div>
-                                    )}
+
 
                                     {/* Vignette */}
                                     <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 z-10" />
@@ -165,7 +161,7 @@ export default function CoverflowSlider({ onSlideChange }: { onSlideChange?: (in
                                     {/* Top Tags - Glass Pills */}
                                     <div className="absolute top-4 right-4 z-30">
                                         <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-[10px] font-mono text-white/80">
-                                            1 / 20
+                                            {index + 1} / {projects.length}
                                         </div>
                                     </div>
                                 </div>

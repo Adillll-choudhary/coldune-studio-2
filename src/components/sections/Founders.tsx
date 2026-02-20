@@ -2,24 +2,25 @@
 
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Sparkles, Quote, Instagram, Linkedin, Twitter, Users } from "lucide-react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 const founders = [
     {
-        name: "Adil",
+        name: "Jamal Adil",
         role: "Founder & Visionary",
         age: 19,
         image: "/founders/adil%20founder.PNG",
         badge: "The Visionary",
         bio: [
-            <span key="1">At just 19 years old, <span className="text-3xl font-serif font-bold text-accent">A</span>dil represents the new generation of creative entrepreneurs.</span>,
+            <span key="1">At just 19 years old, <span className="text-3xl font-serif font-bold text-accent">J</span>amal Adil represents the new generation of creative entrepreneurs.</span>,
             <span key="2">Col<span className="text-3xl font-serif font-bold text-accent">d</span>une Studio was born from a dream where creativity meets professionalism.</span>,
             <span key="3">In every project, his v<span className="text-3xl font-serif font-bold text-accent">i</span>sion creates a story worth telling.</span>,
             <span key="4">He is not just running a studio, he is bui<span className="text-3xl font-serif font-bold text-accent">l</span>ding a legacy.</span>
         ],
         quote: "Age is not a limitation when passion and hard work walk together.",
-        signature: "Adil",
+        signature: "Jamal Adil",
         accent: "#ACC8A2",
         socials: {
             instagram: "https://www.instagram.com/iadillchoudhary17?igsh=d212djhra3kzM2Vk&utm_source=qr",
@@ -52,15 +53,15 @@ const founders = [
     }
 ];
 
-function FounderCard({ founder, index }: { founder: typeof founders[0], index: number }) {
+function FounderCard({ founder, index, isMobile }: { founder: typeof founders[0], index: number, isMobile: boolean }) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
     // Parallax Physics
     const x = useMotionValue(0.5);
     const y = useMotionValue(0.5);
-    const rotateX = useSpring(useTransform(y, [0, 1], [10, -10]), { stiffness: 100, damping: 30 });
-    const rotateY = useSpring(useTransform(x, [0, 1], [-10, 10]), { stiffness: 100, damping: 30 });
+    const rotateX = useSpring(useTransform(y, [0, 1], [isMobile ? 0 : 10, isMobile ? 0 : -10]), { stiffness: 100, damping: 30 });
+    const rotateY = useSpring(useTransform(x, [0, 1], [isMobile ? 0 : -10, isMobile ? 0 : 10]), { stiffness: 100, damping: 30 });
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!cardRef.current) return;
@@ -99,10 +100,12 @@ function FounderCard({ founder, index }: { founder: typeof founders[0], index: n
                     {/* Atmospheric Overlays */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-transparent to-transparent opacity-80" />
 
-                    {/* Scanline Effect */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.03] animate-pulse">
-                        <div className="w-full h-full bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px]" />
-                    </div>
+                    {/* Scanline Effect - Disable on mobile */}
+                    {!isMobile && (
+                        <div className="absolute inset-0 pointer-events-none opacity-[0.03] animate-pulse">
+                            <div className="w-full h-full bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px]" />
+                        </div>
+                    )}
 
                     {/* Age Badge */}
                     <motion.div
@@ -134,7 +137,7 @@ function FounderCard({ founder, index }: { founder: typeof founders[0], index: n
 
                     <h2 className="text-6xl md:text-9xl font-serif font-bold text-white tracking-tighter leading-[0.85]">
                         {founder.name} <br />
-                        <span className="text-accent italic font-light">{founder.role.split("&")[1].trim()}</span>
+                        <span className="text-accent italic font-light">{founder.role.split("&")[1]?.trim() || founder.role}</span>
                     </h2>
                 </motion.div>
 
@@ -157,7 +160,7 @@ function FounderCard({ founder, index }: { founder: typeof founders[0], index: n
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.5 }}
-                    className="relative p-12 bg-white/[0.01] border border-white/5 rounded-[3.5rem] backdrop-blur-3xl group overflow-hidden"
+                    className={`relative p-12 bg-white/[0.01] border border-white/5 rounded-[3.5rem] group overflow-hidden ${isMobile ? 'bg-black/40' : 'backdrop-blur-3xl'}`}
                 >
                     <div className="absolute top-8 left-8 opacity-10 text-accent">
                         <Quote size={48} strokeWidth={1} />
@@ -198,6 +201,7 @@ function FounderCard({ founder, index }: { founder: typeof founders[0], index: n
 
 export default function Founders() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { isMobile } = usePerformance();
 
     return (
         <section id="founders" ref={containerRef} className="relative bg-[#08090B] overflow-hidden">
@@ -240,7 +244,7 @@ export default function Founders() {
 
                 <div className="space-y-32 md:space-y-60 pb-24 md:pb-44">
                     {founders.map((founder, index) => (
-                        <FounderCard key={founder.name} founder={founder} index={index} />
+                        <FounderCard key={founder.name} founder={founder} index={index} isMobile={isMobile} />
                     ))}
                 </div>
 
@@ -263,7 +267,7 @@ export default function Founders() {
                     <div className="flex flex-col items-center gap-6">
                         <div className="flex -space-x-6">
                             <div className="w-20 h-20 rounded-full border-4 border-[#08090B] bg-accent/20 overflow-hidden relative">
-                                <Image src="/founders/IMG_3694.PNG" alt="Adil" fill className="object-cover" />
+                                <Image src="/founders/IMG_3694.PNG" alt="Jamal Adil" fill className="object-cover" />
                             </div>
                             <div className="w-20 h-20 rounded-full border-4 border-[#08090B] bg-white/10 overflow-hidden relative">
                                 <Image src="/founders/IMG_3498.PNG" alt="Arslan" fill className="object-cover" />

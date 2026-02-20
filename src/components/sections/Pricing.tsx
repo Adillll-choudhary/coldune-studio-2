@@ -2,7 +2,8 @@
 
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Check, Zap, Crown, Shield, Rocket, Sparkles } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 const plans = [
     {
@@ -48,7 +49,7 @@ const plans = [
     }
 ];
 
-function PricingCard({ plan, index }: { plan: typeof plans[0], index: number }) {
+function PricingCard({ plan, index, isMobile }: { plan: typeof plans[0], index: number, isMobile: boolean }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -58,8 +59,8 @@ function PricingCard({ plan, index }: { plan: typeof plans[0], index: number }) 
     const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
     const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
 
-    const rotateX = useTransform(mouseY, [-0.5, 0.5], ["10deg", "-10deg"]);
-    const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-10deg", "10deg"]);
+    const rotateX = useTransform(mouseY, [-0.5, 0.5], [isMobile ? "0deg" : "10deg", isMobile ? "0deg" : "-10deg"]);
+    const rotateY = useTransform(mouseX, [-0.5, 0.5], [isMobile ? "0deg" : "-10deg", isMobile ? "0deg" : "10deg"]);
 
     const glareX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"]);
     const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"]);
@@ -99,8 +100,8 @@ function PricingCard({ plan, index }: { plan: typeof plans[0], index: number }) 
             {/* Card Main Body */}
             <div
                 className={`flex flex-col h-full bg-gradient-to-br ${plan.color} rounded-[3rem] md:rounded-[4rem] border border-white/5 transition-all duration-1000 
-                p-8 md:p-14 md:pb-16 overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.5)] ${plan.isPopular ? "border-accent/40" : "hover:border-white/20"}`}
-                style={{ transform: "translateZ(80px)" }}
+                p-8 md:p-14 md:pb-16 overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.5)] ${plan.isPopular ? "border-accent/40" : "hover:border-white/20"} ${isMobile ? 'bg-black/90' : ''}`}
+                style={{ transform: isMobile ? "" : "translateZ(80px)" }}
             >
                 {/* Dynamic Glare Effect */}
                 <motion.div
@@ -196,6 +197,8 @@ function PricingCard({ plan, index }: { plan: typeof plans[0], index: number }) 
 }
 
 export default function Pricing() {
+    const { isMobile } = usePerformance();
+
     return (
         <section id="pricing" className="py-24 md:py-44 relative bg-[#08090B] overflow-hidden">
             {/* Cinematic Background Engine */}
@@ -238,7 +241,7 @@ export default function Pricing() {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 1 }}
-                        className="hidden lg:flex flex-col items-center gap-6 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 backdrop-blur-3xl"
+                        className={`hidden lg:flex flex-col items-center gap-6 p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 ${isMobile ? 'bg-black/40' : 'backdrop-blur-3xl'}`}
                     >
                         <div className="flex items-center gap-4">
                             <Sparkles className="text-accent" size={24} />
@@ -259,7 +262,7 @@ export default function Pricing() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                     {plans.map((plan, index) => (
-                        <PricingCard key={plan.name} plan={plan} index={index} />
+                        <PricingCard key={plan.name} plan={plan} index={index} isMobile={isMobile} />
                     ))}
                 </div>
 

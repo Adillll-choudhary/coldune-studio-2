@@ -27,9 +27,6 @@ export default function Cursor() {
         checkTouch();
     }, []);
 
-    // Don't render cursor on touch devices
-    if (isTouchDevice) return null;
-
     // Liquid Smooth Spring Physics
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
@@ -85,6 +82,8 @@ export default function Cursor() {
 
         return () => clearInterval(cleanupInterval);
     }, [particles.length]);
+
+    if (isTouchDevice) return null;
 
     return (
         <>

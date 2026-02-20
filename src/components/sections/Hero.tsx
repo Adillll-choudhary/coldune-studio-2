@@ -25,51 +25,44 @@ export default function Hero() {
     return (
         <section ref={sectionRef} className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-[#030305]">
             {/* 1. Background Layer - Desktop Only */}
+            {/* 1. Background Layer - Video Enabled for All Devices */}
             <div className="absolute inset-0 z-0 overflow-hidden">
-                {/* Mobile: Static Gradient Background (No Video for Performance) */}
-                <div className="md:hidden absolute inset-0 bg-gradient-to-b from-[#08090B] via-[#0B0D10] to-[#030305]">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent" />
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
-                    {/* Subtle animated particles */}
-                    <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-accent/30 rounded-full animate-pulse" />
-                    <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/20 rounded-full animate-pulse delay-300" />
-                    <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-accent/20 rounded-full animate-pulse delay-700" />
-                </div>
-
-                {/* Desktop: Video Background with Poster */}
-                {!isMobile && (
-                    <motion.div
-                        style={{ y: y1, scale }}
-                        initial={{ scale: 1.15, opacity: 0 }}
-                        animate={hasPreloaded ? { scale: 1, opacity: 1 } : { scale: 1.15, opacity: 0 }}
-                        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-                        className="hidden md:block w-full h-full relative will-change-transform"
+                <motion.div
+                    style={{ y: y1, scale }}
+                    initial={{ scale: 1.15, opacity: 0 }}
+                    animate={hasPreloaded ? { scale: 1, opacity: 1 } : { scale: 1.15, opacity: 0 }}
+                    transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+                    className="w-full h-full relative will-change-transform"
+                >
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        suppressHydrationWarning
+                        poster="/bg/IMG_3692.PNG"
+                        className="w-full h-full object-cover transition-opacity duration-1000 brightness-[1.05]"
                     >
-                        <video
-                            ref={videoRef}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="auto"
-                            poster="/bg/IMG_3692.PNG"
-                            className="w-full h-full object-cover transition-opacity duration-1000 brightness-[1.05]"
-                        >
-                            <source src="/bg/firefly.mp4" type="video/mp4" />
-                        </video>
+                        <source src="/bg/firefly.mp4" type="video/mp4" />
+                    </video>
 
-                        {/* Dynamic Atmospheric Overlays */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#08090B]/40 via-transparent to-[#08090B]/80 z-10" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/80 via-transparent to-transparent z-10" />
+                    {/* Dynamic Atmospheric Overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#08090B]/40 via-transparent to-[#08090B]/80 z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/80 via-transparent to-transparent z-10" />
 
-                        {/* Sharpening HUD Frame */}
-                        <div className="absolute inset-10 border border-white/[0.03] rounded-[3rem] pointer-events-none z-20" />
+                    {/* Sharpening HUD Frame */}
+                    <div className="absolute inset-10 border border-white/[0.03] rounded-[3rem] pointer-events-none z-20" />
 
-                        {/* Hyper-Glow Lens Flare */}
-                        <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-accent/15 blur-[180px] rounded-full z-10 animate-pulse-slow mix-blend-screen" />
-                        <div className="absolute bottom-[-15%] left-[5%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full z-10 mix-blend-overlay" />
-                    </motion.div>
-                )}
+                    {/* Hyper-Glow Lens Flare - Disabled on mobile for performance */}
+                    {!isMobile && (
+                        <>
+                            <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[70%] bg-accent/15 blur-[180px] rounded-full z-10 animate-pulse-slow mix-blend-screen" />
+                            <div className="absolute bottom-[-15%] left-[5%] w-[40%] h-[40%] bg-white/5 blur-[120px] rounded-full z-10 mix-blend-overlay" />
+                        </>
+                    )}
+                </motion.div>
             </div>
 
 

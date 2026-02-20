@@ -8,6 +8,7 @@ import {
     Palette, Code2, LineChart, Zap, Sparkles, Orbit
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { usePerformance } from "@/hooks/usePerformance";
 
 // --- Service Data ---
 const creativeServices = [
@@ -98,7 +99,7 @@ function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false,
             transition={{ delay, duration: 0.8 }}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { x.set(0.5); y.set(0.5); }}
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            style={{ rotateX: isMobile ? 0 : rotateX, rotateY: isMobile ? 0 : rotateY, transformStyle: "preserve-3d" }}
             className="relative group h-full"
         >
             {/* Ghost Background Text */}
@@ -114,7 +115,7 @@ function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false,
             )}
 
             {/* Pillar Body */}
-            <div className="relative h-full bg-[#0E1116]/60 backdrop-blur-3xl border border-white/5 rounded-[3.5rem] p-8 md:p-12 flex flex-col hover:border-accent/30 transition-all duration-1000 overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
+            <div className={`relative h-full bg-[#0E1116]/60 border border-white/5 rounded-[3.5rem] p-8 md:p-12 flex flex-col hover:border-accent/30 transition-all duration-1000 overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.5)] ${isMobile ? 'bg-[#0E1116]/95' : 'backdrop-blur-3xl'}`}>
                 {/* Dynamic Radial Highlight */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(172,200,162,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
@@ -152,14 +153,7 @@ function Pillar({ title, icon: Icon, services, ghostText, delay, accent = false,
 }
 
 export default function Services() {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        setIsMobile(window.innerWidth < 768);
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const { isMobile } = usePerformance();
 
     return (
         <section id="services" className="py-24 md:py-44 relative bg-[#0B0D10] overflow-hidden">

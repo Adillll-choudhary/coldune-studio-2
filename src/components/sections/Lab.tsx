@@ -85,6 +85,11 @@ export default function Lab() {
     const [activeMode, setActiveMode] = useState<"Live Demo" | "Preview" | "Concept">("Live Demo");
     const { isMobile, isLowPower } = usePerformance();
     const containerRef = useRef<HTMLDivElement>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Mobile detect removed - handled by hook
 
@@ -103,22 +108,23 @@ export default function Lab() {
 
     return (
         <section id="lab" className="py-32 relative bg-[#030304] overflow-hidden" ref={containerRef} onMouseMove={handleMouseMove}>
-            {/* Background Video - Earth */}
+            {/* Background Video - Earth (Client Only to prevent Hydration Mismatch) */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                {!isMobile ? (
+                {mounted && !isMobile ? (
                     <video
                         autoPlay
                         loop
                         muted
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-screen"
+                        suppressHydrationWarning
+                        className="absolute inset-0 w-full h-full object-cover"
                     >
                         <source src="/bg/earth.mp4" type="video/mp4" />
                     </video>
                 ) : (
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-950/30 via-black to-black" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#030304] via-[#030304]/50 to-[#030304] opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#030304] via-[#030304]/30 to-transparent" />
             </div>
 
             <div className="container mx-auto px-6 relative z-10 w-full max-w-7xl">
@@ -184,7 +190,7 @@ export default function Lab() {
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
                                     transition={{ duration: 0.4, delay: i * 0.05 }}
-                                    className={`relative group rounded-[2.5rem] overflow-hidden border border-white/5 backdrop-blur-md hover:border-white/20 transition-all duration-500 hover:shadow-[0_0_50px_rgba(255,255,255,0.05)] cursor-pointer ${exp.span}`}
+                                    className={`relative group rounded-[2.5rem] overflow-hidden border border-white/5 transition-all duration-500 cursor-pointer ${isMobile ? 'bg-black/80' : 'backdrop-blur-md hover:border-white/20 hover:shadow-[0_0_50px_rgba(255,255,255,0.05)]'} ${exp.span}`}
                                 >
                                     {/* Dynamic Background */}
                                     <div className={`absolute inset-0 ${exp.bg} opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
